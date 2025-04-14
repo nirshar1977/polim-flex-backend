@@ -1,0 +1,962 @@
+{
+	"info": {
+		"_postman_id": "58717d19-ef42-4cce-a87b-c09cf3ce1653",
+		"name": "Poalim Flex Backend",
+		"description": "API collection for Poalim Flex Backend - Flexible Mortgage Repayment Solution",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6578795"
+	},
+	"item": [
+		{
+			"name": "User Management",
+			"item": [
+				{
+					"name": "Register New User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"Secur3P@ssw0rd\",\n    \"phoneNumber\": \"555-123-4567\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "Registers a new user in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves the profile of a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"555-123-4567\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{userId}}"
+							]
+						},
+						"description": "Updates the profile of an existing user"
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/authenticate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"authenticate"
+							]
+						},
+						"description": "Authenticates a user with credentials"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{userId}}"
+							]
+						},
+						"description": "Deletes a user account"
+					},
+					"response": []
+				}
+			],
+			"description": "APIs for user registration and profile management"
+		},
+		{
+			"name": "Mortgage Management",
+			"item": [
+				{
+					"name": "Get User's Mortgages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"user",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves all mortgages associated with a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mortgage Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/{{accountNumber}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"{{accountNumber}}"
+							]
+						},
+						"description": "Retrieves detailed information about a specific mortgage"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mortgage Payment Schedule",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/{{accountNumber}}/payment-schedule?fromDate=2025-04-01&toDate=2026-04-01",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"{{accountNumber}}",
+								"payment-schedule"
+							],
+							"query": [
+								{
+									"key": "fromDate",
+									"value": "2025-04-01"
+								},
+								{
+									"key": "toDate",
+									"value": "2026-04-01"
+								}
+							]
+						},
+						"description": "Retrieves the payment schedule for a specific mortgage"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mortgage Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/statistics/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"statistics",
+								"user",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves mortgage statistics for a specific user"
+					},
+					"response": []
+				}
+			],
+			"description": "APIs for mortgage information and management"
+		},
+		{
+			"name": "Mortgage Adjustment",
+			"item": [
+				{
+					"name": "Request Mortgage Payment Adjustment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"USER12345\",\n    \"mortgageAccountNumber\": \"MORT98765\",\n    \"reductionAmount\": 1500.00,\n    \"adjustmentMonth\": \"2025-07-01\",\n    \"adjustmentReason\": \"Temporary financial pressure due to children's education expenses\",\n    \"financialPressureType\": \"EDUCATION\",\n    \"repaymentStrategy\": \"SPREAD_EVENLY\",\n    \"hasSuportingDocumentation\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/request",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"request"
+							]
+						},
+						"description": "Allows customers to temporarily reduce mortgage payments"
+					},
+					"response": []
+				},
+				{
+					"name": "Check Mortgage Adjustment Eligibility",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/eligibility/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"eligibility",
+								"{{userId}}"
+							]
+						},
+						"description": "Determines if a user is eligible for mortgage payment flexibility"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adjustment History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/history/{{userId}}?fromDate=2024-10-01&toDate=2025-04-01",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"history",
+								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "fromDate",
+									"value": "2024-10-01"
+								},
+								{
+									"key": "toDate",
+									"value": "2025-04-01"
+								}
+							]
+						},
+						"description": "Retrieves the history of mortgage adjustments for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adjustment Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/recommendation/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"recommendation",
+								"{{userId}}"
+							]
+						},
+						"description": "Provides AI-powered recommendations for mortgage adjustments based on financial profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate Adjustment Impact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"USER12345\",\n    \"mortgageAccountNumber\": \"MORT98765\",\n    \"proposedReductionAmount\": 1500.00,\n    \"proposedStartDate\": \"2025-07-01\",\n    \"durationMonths\": 3,\n    \"repaymentStrategy\": \"SPREAD_EVENLY\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/simulate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"simulate"
+							]
+						},
+						"description": "Simulates the financial impact of a proposed mortgage adjustment"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Pending Adjustment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/cancel/{{adjustmentId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"cancel",
+								"{{adjustmentId}}"
+							]
+						},
+						"description": "Cancels a pending mortgage adjustment request"
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze Financial Stress",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/financial-stress/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"financial-stress",
+								"{{userId}}"
+							]
+						},
+						"description": "Analyzes the user's financial stress indicators using AI analysis"
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze Long-term Financial Impact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mortgage/adjustment/long-term-impact?userId={{userId}}&reductionAmount=1500.00",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mortgage",
+								"adjustment",
+								"long-term-impact"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "reductionAmount",
+									"value": "1500.00"
+								}
+							]
+						},
+						"description": "Analyzes the long-term financial impact of proposed mortgage adjustments"
+					},
+					"response": []
+				}
+			],
+			"description": "Flexible Mortgage Repayment Management"
+		},
+		{
+			"name": "Financial Profile",
+			"item": [
+				{
+					"name": "Get User Financial Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/financial-profile/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"financial-profile",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves the financial profile of a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Financial Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"totalAnnualIncome\": 85000.00,\n    \"creditScore\": 720,\n    \"employmentStatus\": \"FULL_TIME\",\n    \"debtToIncomeRatio\": 28.5,\n    \"employmentStartDate\": \"2021-05-15\",\n    \"monthlyExpenses\": [\n        {\n            \"expenseType\": \"RENT\",\n            \"amount\": 1800.00,\n            \"description\": \"Monthly rent payment\"\n        },\n        {\n            \"expenseType\": \"UTILITIES\",\n            \"amount\": 250.00,\n            \"description\": \"Electricity, water, gas\"\n        },\n        {\n            \"expenseType\": \"TRANSPORTATION\",\n            \"amount\": 350.00,\n            \"description\": \"Car payment and fuel\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/financial-profile/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"financial-profile",
+								"{{userId}}"
+							]
+						},
+						"description": "Updates or creates a user's financial profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Financial Health Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/financial-profile/{{userId}}/health-report",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"financial-profile",
+								"{{userId}}",
+								"health-report"
+							]
+						},
+						"description": "Generates a comprehensive financial health report for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Monthly Expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/financial-profile/{{userId}}/expenses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"financial-profile",
+								"{{userId}}",
+								"expenses"
+							]
+						},
+						"description": "Retrieves the monthly expenses of a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Monthly Expense",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"expenseType\": \"FOOD\",\n    \"amount\": 550.00,\n    \"description\": \"Groceries and dining out\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/financial-profile/{{userId}}/expenses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"financial-profile",
+								"{{userId}}",
+								"expenses"
+							]
+						},
+						"description": "Adds a new monthly expense to the user's financial profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Monthly Expense",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/financial-profile/{{userId}}/expenses/{{expenseId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"financial-profile",
+								"{{userId}}",
+								"expenses",
+								"{{expenseId}}"
+							]
+						},
+						"description": "Removes a monthly expense from the user's financial profile"
+					},
+					"response": []
+				}
+			],
+			"description": "APIs for user financial profile management and analysis"
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "Get User Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"user",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves all notifications for a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/mark-read/{{notificationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"mark-read",
+								"{{notificationId}}"
+							]
+						},
+						"description": "Marks a specific notification as read"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark All Notifications as Read",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/mark-all-read/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"mark-all-read",
+								"{{userId}}"
+							]
+						},
+						"description": "Marks all notifications for a user as read"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Notification",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/{{notificationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"{{notificationId}}"
+							]
+						},
+						"description": "Deletes a specific notification"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Notification Preferences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/preferences/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"preferences",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves notification preferences for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Notification Preferences",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"emailNotificationsEnabled\": true,\n    \"smsNotificationsEnabled\": true,\n    \"pushNotificationsEnabled\": false,\n    \"paymentRemindersEnabled\": true,\n    \"adjustmentUpdatesEnabled\": true,\n    \"financialInsightsEnabled\": true,\n    \"reminderDaysBeforePayment\": 5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/preferences/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"preferences",
+								"{{userId}}"
+							]
+						},
+						"description": "Updates notification preferences for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"type\": \"PAYMENT_REMINDER\",\n    \"title\": \"Upcoming Mortgage Payment\",\n    \"message\": \"Your mortgage payment is due in 5 days.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"send"
+							]
+						},
+						"description": "Sends a notification to a user (admin use)"
+					},
+					"response": []
+				}
+			],
+			"description": "APIs for user notification management"
+		},
+		{
+			"name": "Admin Reporting",
+			"item": [
+				{
+					"name": "Get Adjustment Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/reports/adjustment-summary?fromDate=2024-11-01&toDate=2025-04-01",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"adjustment-summary"
+							],
+							"query": [
+								{
+									"key": "fromDate",
+									"value": "2024-11-01"
+								},
+								{
+									"key": "toDate",
+									"value": "2025-04-01"
+								}
+							]
+						},
+						"description": "Retrieves summary statistics for mortgage adjustments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Demographics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/reports/user-demographics",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"user-demographics"
+							]
+						},
+						"description": "Retrieves demographic information about system users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Financial Risk Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/reports/financial-risk",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"financial-risk"
+							]
+						},
+						"description": "Retrieves system-wide financial risk assessment"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adjustment Trends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/reports/adjustment-trends?fromDate=2024-11-01&toDate=2025-04-01",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"adjustment-trends"
+							],
+							"query": [
+								{
+									"key": "fromDate",
+									"value": "2024-11-01"
+								},
+								{
+									"key": "toDate",
+									"value": "2025-04-01"
+								}
+							]
+						},
+						"description": "Retrieves trends in mortgage adjustment requests over time"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mortgage Performance Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/reports/mortgage-performance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"mortgage-performance"
+							]
+						},
+						"description": "Retrieves performance metrics for mortgages in the system"
+					},
+					"response": []
+				}
+			],
+			"description": "Administrative APIs for system-wide reporting and analytics"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "USER12345",
+			"type": "string"
+		},
+		{
+			"key": "accountNumber",
+			"value": "MORT98765",
+			"type": "string"
+		},
+		{
+			"key": "expenseId",
+			"value": "EXP-A1B2C3D4",
+			"type": "string"
+		},
+		{
+			"key": "notificationId",
+			"value": "5f0e8c87-7b5a-4a69-b96d-f0f1d47fe4ba",
+			"type": "string"
+		},
+		{
+			"key": "adjustmentId",
+			"value": "ADJ-A1B2C3D4",
+			"type": "string"
+		}
+	]
+}
