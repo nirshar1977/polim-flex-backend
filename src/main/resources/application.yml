@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: poalim-flex-backend
+
+  # MongoDB Configuration
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/poalimflex
+      database: poalimflex
+
+# Logging configuration
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
+    com.poalimflex: DEBUG
+    org.springframework.web: INFO
+
+# OpenAPI/Swagger configuration
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+# Application-specific configuration
+poalim:
+  flex:
+    ai:
+      risk-assessment:
+        enabled: true
+        threshold: 0.7
+    mortgage:
+      max-annual-adjustments: 4
+      max-reduction-percentage: 30
+
+# Profiles
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/poalimflex_dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    mongodb:
+      uri: ${PROD_MONGODB_URI}
