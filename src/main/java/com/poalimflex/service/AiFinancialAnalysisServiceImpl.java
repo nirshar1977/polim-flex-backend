@@ -1,6 +1,6 @@
 package com.poalimflex.service;
 
-import com.poalimflex.dto.MortgageAdjustmentRequestDto;
+import com.poalimflex.dto.mortage.adjustment.MortgageAdjustmentRequestDto;
 import com.poalimflex.entity.UserFinancialProfile;
 import com.poalimflex.repository.UserFinancialProfileRepository;
 import lombok.RequiredArgsConstructor;
