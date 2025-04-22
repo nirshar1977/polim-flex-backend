@@ -3,6 +3,8 @@ package com.poalimflex.controller;
 import com.poalimflex.dto.user.UserCredentialsDto;
 import com.poalimflex.dto.user.UserProfileDto;
 import com.poalimflex.dto.user.UserRegistrationDto;
+import com.poalimflex.entity.User;
+import com.poalimflex.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.Random;
+
 /**
  * Controller for user management operations
  */
@@ -25,8 +31,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User Management", description = "APIs for user registration and profile management")
 public class UserController {
 
-    // Mock implementation - in a real application, you would inject proper service layers
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
     @Operation(summary = "Register New User",
@@ -39,17 +45,41 @@ public class UserController {
     public ResponseEntity<UserProfileDto> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
         log.info("Registering new user with email: {}", registrationDto.getEmail());
 
-        // In a real implementation, check if user already exists
-        // For demo purposes, assume registration is successful
+        // Check if user with this email already exists
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            log.warn("Registration failed: Email already exists: {}", registrationDto.getEmail());
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
 
-        // Create user profile
-        UserProfileDto profile = UserProfileDto.builder()
-                .userId("USER" + (10000 + (int)(Math.random() * 90000)))
+        // Generate a unique user ID
+        String userId = generateUniqueUserId();
+
+        // Create and save the user entity
+        User user = User.builder()
+                .userId(userId)
                 .firstName(registrationDto.getFirstName())
                 .lastName(registrationDto.getLastName())
                 .email(registrationDto.getEmail())
+                .passwordHash(passwordEncoder.encode(registrationDto.getPassword()))
                 .phoneNumber(registrationDto.getPhoneNumber())
-                .registrationDate(java.time.LocalDate.now())
+                .registrationDate(LocalDate.now())
+                .emailVerified(false)
+                .twoFactorEnabled(false)
+                .build();
+
+        User savedUser = userRepository.save(user);
+        log.info("User successfully registered with ID: {}", savedUser.getUserId());
+
+        // Create and return the user profile DTO
+        UserProfileDto profile = UserProfileDto.builder()
+                .userId(savedUser.getUserId())
+                .firstName(savedUser.getFirstName())
+                .lastName(savedUser.getLastName())
+                .email(savedUser.getEmail())
+                .phoneNumber(savedUser.getPhoneNumber())
+                .registrationDate(savedUser.getRegistrationDate())
+                .emailVerified(savedUser.getEmailVerified())
+                .twoFactorEnabled(savedUser.getTwoFactorEnabled())
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profile);
@@ -63,21 +93,12 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable String userId) {
-        // Mock implementation - in a real application, you'd fetch from a repository
-        if (userId.startsWith("USER")) {
-            UserProfileDto profile = UserProfileDto.builder()
-                    .userId(userId)
-                    .firstName("John")
-                    .lastName("Doe")
-                    .email("john.doe@example.com")
-                    .phoneNumber("555-123-4567")
-                    .registrationDate(java.time.LocalDate.now().minusMonths(3))
-                    .build();
+        log.info("Fetching profile for user: {}", userId);
 
-            return ResponseEntity.ok(profile);
-        }
-
-        return ResponseEntity.notFound().build();
+        return userRepository.findByUserId(userId)
+                .map(this::convertToProfileDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{userId}")
@@ -93,18 +114,28 @@ public class UserController {
 
         log.info("Updating profile for user: {}", userId);
 
-        // Validate userId
+        // Validate userId matches the one in DTO
         if (!userId.equals(profileDto.getUserId())) {
             return ResponseEntity.badRequest().build();
         }
 
-        // Mock implementation - in a real application, update in repository
-        if (userId.startsWith("USER")) {
-            // Return the updated profile
-            return ResponseEntity.ok(profileDto);
+        // Check if user exists
+        Optional<User> userOpt = userRepository.findByUserId(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
+        // Update user entity
+        User user = userOpt.get();
+        user.setFirstName(profileDto.getFirstName());
+        user.setLastName(profileDto.getLastName());
+        user.setPhoneNumber(profileDto.getPhoneNumber());
+
+        // Save updated user
+        User updatedUser = userRepository.save(user);
+
+        // Return updated profile
+        return ResponseEntity.ok(convertToProfileDto(updatedUser));
     }
 
     @PostMapping("/authenticate")
@@ -117,23 +148,25 @@ public class UserController {
     public ResponseEntity<UserProfileDto> authenticateUser(@Valid @RequestBody UserCredentialsDto credentials) {
         log.info("Authentication attempt for email: {}", credentials.getEmail());
 
-        // Mock authentication - in a real implementation, this would verify against stored credentials
-        if ("john.doe@example.com".equals(credentials.getEmail()) &&
-                "password123".equals(credentials.getPassword())) {
+        // Enhanced logging for debugging
+        Optional<User> userOpt = userRepository.findByEmail(credentials.getEmail());
 
-            UserProfileDto profile = UserProfileDto.builder()
-                    .userId("USER12345")
-                    .firstName("John")
-                    .lastName("Doe")
-                    .email(credentials.getEmail())
-                    .phoneNumber("555-123-4567")
-                    .registrationDate(java.time.LocalDate.now().minusMonths(3))
-                    .build();
-
-            return ResponseEntity.ok(profile);
+        if (userOpt.isEmpty()) {
+            log.warn("Authentication failed: User not found with email: {}", credentials.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        User user = userOpt.get();
+        boolean passwordMatches = passwordEncoder.matches(credentials.getPassword(), user.getPasswordHash());
+        log.info("Password match: {}", passwordMatches);
+
+        if (!passwordMatches) {
+            log.warn("Authentication failed: Invalid password for user: {}", credentials.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        log.info("Authentication successful for user: {}", credentials.getEmail());
+        return ResponseEntity.ok(convertToProfileDto(user));
     }
 
     @DeleteMapping("/{userId}")
@@ -146,11 +179,42 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
         log.info("Deleting user: {}", userId);
 
-        // Mock implementation - in a real application, delete from repository
-        if (userId.startsWith("USER")) {
-            return ResponseEntity.noContent().build();
+        // Check if user exists
+        Optional<User> userOpt = userRepository.findByUserId(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
+        // Delete user
+        userRepository.delete(userOpt.get());
+        log.info("User deleted: {}", userId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // Helper methods
+    private UserProfileDto convertToProfileDto(User user) {
+        return UserProfileDto.builder()
+                .userId(user.getUserId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .registrationDate(user.getRegistrationDate())
+                .emailVerified(user.getEmailVerified())
+                .twoFactorEnabled(user.getTwoFactorEnabled())
+                .build();
+    }
+
+    private String generateUniqueUserId() {
+        // Generate a random 5-digit number and prefix with "USER"
+        Random random = new Random();
+        String userId;
+        do {
+            int randomNum = 10000 + random.nextInt(90000); // 5-digit number between 10000 and 99999
+            userId = "USER" + randomNum;
+        } while (userRepository.findByUserId(userId).isPresent());
+
+        return userId;
     }
 }
